@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import Header from './component/Header';
+import Header from '../component/Header';
 
 function MainLayout({ children }) {
   return (
