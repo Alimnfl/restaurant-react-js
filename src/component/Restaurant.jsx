@@ -10,37 +10,37 @@ function Restaurant() {
 
   const apiKey = '39d5a50c9cmshbcb1bfc5a3d58e7p1679c6jsn5e102ca0a19d';
 
-  const fetchData = async () => {
-    const options = {
-      method: 'GET',
-      url: 'https://travel-advisor.p.rapidapi.com/restaurants/list',
-      params: {
-        location_id: '293919',
-        restaurant_tagcategory: '10591',
-        restaurant_tagcategory_standalone: '10591',
-        currency: 'USD',
-        lunit: 'km',
-        limit: '30',
-        open_now: 'false',
-        lang: 'en_US',
-      },
-      headers: {
-        'X-RapidAPI-Key': apiKey,
-        'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com',
-      },
+  useEffect(() => {
+    const fetchData = async () => {
+      const options = {
+        method: 'GET',
+        url: 'https://travel-advisor.p.rapidapi.com/restaurants/list',
+        params: {
+          location_id: '293919',
+          restaurant_tagcategory: '10591',
+          restaurant_tagcategory_standalone: '10591',
+          currency: 'USD',
+          lunit: 'km',
+          limit: '30',
+          open_now: 'false',
+          lang: 'en_US',
+        },
+        headers: {
+          'X-RapidAPI-Key': apiKey,
+          'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com',
+        },
+      };
+
+      try {
+        const response = await axios.request(options);
+        setApiData(response.data.data);
+        setTimeout(fetchData, 60000);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
     };
 
-    try {
-      const response = await axios.request(options);
-      setApiData(response.data.data);
-      setTimeout(fetchData, 60000);
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
     fetchData();
   }, []);
 
