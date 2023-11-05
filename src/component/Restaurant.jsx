@@ -27,14 +27,13 @@ function Restaurant() {
       headers: {
         'X-RapidAPI-Key': apiKey,
         'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com',
-        Authorization: 'Bearer 39d5a50c9cmshbcb1bfc5a3d58e7p1679c6jsn5e102ca0a19d',
       },
     };
 
     try {
       const response = await axios.request(options);
       setApiData(response.data.data);
-      setLoading(false);
+      setTimeout(fetchData, 60000);
     } catch (error) {
       console.error(error);
       setLoading(false);
