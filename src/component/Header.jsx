@@ -1,10 +1,8 @@
 function Header() {
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold">Alimnfl Restaurant</h1>
-      <p className="text-gray-800 ">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid iste, eius voluptatibus repellat quidem possimus corrupti, deleniti dolorum non quam quos. Illo numquam nobis possimus, quibusdam quia sequi minus recusandae.
-      </p>
+      <h1 className="text-2xl font-semibold">Alimnfl - Top 30 Restaurant on Thailand</h1>
+      <p className="text-gray-800 ">You can exploring thailand restaurant for this website if you travel on this country, so enjoy your trip!</p>
     </div>
   );
 }

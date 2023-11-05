@@ -1,4 +1,4 @@
-import { AiOutlineStar } from 'react-icons/ai';
+import { AiFillStar } from 'react-icons/ai';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
@@ -6,6 +6,7 @@ import axios from 'axios';
 
 function Restaurant() {
   const [apiData, setApiData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const apiKey = '39d5a50c9cmshbcb1bfc5a3d58e7p1679c6jsn5e102ca0a19d';
 
@@ -32,9 +33,11 @@ function Restaurant() {
 
     try {
       const response = await axios.request(options);
-      setApiData(response.data);
+      setApiData(response.data.data);
+      setLoading(false);
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   };
 
@@ -43,7 +46,8 @@ function Restaurant() {
   }, []);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 50;
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(apiData?.length / itemsPerPage);
 
   const handlePreviousPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -53,38 +57,65 @@ function Restaurant() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
 
-  return (
-    <div>
-      <h1 className="py-4 text-xl font-medium ">Restaurant</h1>
-      {apiData.map((d, i) => (
-        <div key={i} className="flex flex-wrap justify-between gap-4">
-          <div className="w-[280px] flex gap-2 flex-col">
-            <Link to={`/anime/2`}>
-              <div className="border bg-gray-400 w-full h-[200px]"></div>
-            </Link>
-            <h1 className="font-medium align-middle">Very long name restaurant number 1 in list</h1>
-            <div>
-              <AiOutlineStar className="text-red-200" />
-            </div>
-            <div className="flex flex-row justify-between text-xs font-light">
-              <p>THAI * $$$$</p>
-              <p>
-                <span>*</span> Status
-              </p>
-            </div>
-            <Link to={`/anime/2`}>
-              <button className="w-full h-[40px] text-white transform transition-transform hover:scale-105 hover:border-blue-500 text-lg border bg-blue-600 rounded-md">LEARN MORE</button>
-            </Link>
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const visibleData = apiData?.slice(startIndex, endIndex);
+
+  return loading ? (
+    <div className="mt-4">
+      <div className="flex flex-wrap gap-6">
+        {Array.from({ length: itemsPerPage }).map((_, i) => (
+          <div key={i} className="w-[280px] max-h-[350px] justify-between p-2 flex gap-2 flex-col">
+            <div className="w-full h-[200px] bg-gray-200"></div>
+            <div className="font-medium align-middle bg-gray-200">&nbsp;</div>
+            <div className="w-full font-medium bg-gray-200">&nbsp;</div>
+            <button className="w-full h-[40px] text-white text-lg border rounded-md bg-gray-200">&nbsp;</button>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div className="mt-4">
+      {console.log(apiData)}
+      <div className="flex flex-wrap gap-6">
+        {visibleData.map((d, i) => (
+          <div key={i}>
+            <div className="w-[280px]  h-[380px]  bg-gray-100 transform transition-transform hover:scale-105 border-2 rounded-md justify-between p-2 flex gap-2 flex-col">
+              <Link to={`/restaurant/${d.location_id}`}>
+                <img src={d?.photo?.images?.medium?.url} className="object-cover w-full rounded-md border h-[200px]" />
+              </Link>
+              <h1 className="font-medium align-middle">{d.name}</h1>
+              <div className="flex flex-row items-center gap-4">
+                <div className="flex flex-row">
+                  {Array.from({ length: Math.round(d.rating) }).map((_, i) => (
+                    <AiFillStar key={i} className="text-yellow-400" />
+                  ))}
+                </div>
+                <div className="text-sm font-light">|</div>
+                <div className="text-sm font-light">{d?.num_reviews} User</div>
+              </div>
+              <div className="flex flex-row items-center justify-between text-xs font-light">
+                <p className="flex flex-row gap-4">
+                  <span className="font-medium">{d?.address_obj?.city}</span> <span className="font-medium text-green-700">{d?.price_level}</span>
+                </p>
+                <p className="flex">{d?.open_now_text}</p>
+              </div>
+              <Link to={`/restaurant/${d.location_id}`}>
+                <button className="w-full h-[40px] text-white  hover:border-blue-500 text-lg border bg-blue-600 rounded-md">LEARN MORE</button>
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+
       <div className="flex flex-col items-center mt-4">
-        <div className="flex flex-row">
+        <div className="flex flex-row gap-[60px]">
           <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-            <GoChevronLeft size={14} fill={currentPage === 1 ? '#5A5A5A' : '#fff'} />
+            <GoChevronLeft size={14} fill={currentPage === 1 ? '#fff' : '#5A5A5A'} />
           </button>
           <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-            <GoChevronRight size={14} fill={currentPage === totalPages ? '#5A5A5A' : '#fff'} />
+            <GoChevronRight size={14} fill={currentPage === totalPages ? '#fff' : '#5A5A5A'} />
           </button>
         </div>
         <p>{`Page ${currentPage} of ${totalPages}`}</p>
