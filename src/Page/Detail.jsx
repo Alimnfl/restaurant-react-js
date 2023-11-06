@@ -7,7 +7,8 @@ function Detail() {
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const apiKey = '39d5a50c9cmshbcb1bfc5a3d58e7p1679c6jsn5e102ca0a19d';
+  const apiKey = '98f0cc0e59msh50e8edb049b82c0p18414cjsnc8eeefc6c1d4';
+
   const { id } = useParams();
 
   useEffect(() => {
