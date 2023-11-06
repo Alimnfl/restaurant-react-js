@@ -35,6 +35,7 @@ function Restaurant() {
         const response = await axios.request(options);
         setApiData(response.data.data);
         setTimeout(fetchData, 60000);
+        setLoading(false);
       } catch (error) {
         console.error(error);
         setLoading(false);
@@ -63,6 +64,7 @@ function Restaurant() {
 
   return loading ? (
     <div className="mt-4">
+      {console.log(visibleData)}
       <div className="flex flex-wrap gap-6">
         {Array.from({ length: itemsPerPage }).map((_, i) => (
           <div key={i} className="w-[280px] max-h-[350px] justify-between p-2 flex gap-2 flex-col">
@@ -76,7 +78,6 @@ function Restaurant() {
     </div>
   ) : (
     <div className="mt-4">
-      {console.log(apiData)}
       <div className="flex flex-wrap gap-6">
         {visibleData.map((d, i) => (
           <div key={i}>
